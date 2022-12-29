@@ -2,7 +2,7 @@ import { ReceitaComponent } from './../../receita/receita.component';
 import { Routes } from '@angular/router';
 
 import { HomeComponent } from '../../home/home.component';
-import { CadastrosComponent } from '../../cadastros/cadastros.component';
+import { CadastrosComponent } from '../../cadastro/cadastros.component';
 import { TablesComponent } from '../../tables/tables.component';
 import { TypographyComponent } from '../../typography/typography.component';
 import { IconsComponent } from '../../icons/icons.component';
