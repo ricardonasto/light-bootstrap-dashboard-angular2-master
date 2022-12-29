@@ -1,0 +1,29 @@
+.btn-group{
+    margin-left: 5px;
+}
+
+.linhaEdit{
+    cursor: pointer;
+    font-size: 12px !important;
+}
+ 
+.btn{
+    padding: 2px 10px;
+}
+
+.form-control { 
+    height: 35px;
+    font-size: 12px;
+}
+
+.card label {
+     margin-bottom: 1px !important;
+}
+
+.category{
+    font-size: 10px !important;
+}
+
+.select{
+    font-size: 12px;
+}
