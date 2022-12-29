@@ -275,7 +275,7 @@ export class CadastrosComponent implements OnInit {
 
   limparEdicaoInclusao(){
     this.editandoMP = false;
-    this.editandoPF = false;
+    this.editandoPF = false; 
     this.editandoFP = false;
     this.classEditar = {'col-md-12' : true, 'col-md-8' : false};
   }

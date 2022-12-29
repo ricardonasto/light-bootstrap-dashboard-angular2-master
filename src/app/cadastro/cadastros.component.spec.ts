@@ -7,7 +7,7 @@ import { CadastrosComponent } from './cadastros.component';
 
 describe('UserComponent', () => {
   let component: CadastrosComponent;
-  let fixture: ComponentFixture<CadastrosComponent>;
+  let fixture: ComponentFixture<CadastrosComponent>; 
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
