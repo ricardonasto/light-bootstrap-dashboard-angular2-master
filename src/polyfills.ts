@@ -8,7 +8,7 @@ import 'zone.js/dist/zone';
 
 // Needed for: IE9
 // import 'classlist.js';
-
+ 
 // Animations
 // Needed for: All but Chrome and Firefox, Not supported in IE9
 // import 'web-animations-js';

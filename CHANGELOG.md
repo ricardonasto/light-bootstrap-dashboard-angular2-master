@@ -56,5 +56,5 @@
 - changes in sidebar(cleaned li tags + changed z-index)
 - changes in footer(added current date)
 
-## [1.0.0] - 2016-12-14
+## [1.0.0] - 2016-12-14 
 ### initial Release
