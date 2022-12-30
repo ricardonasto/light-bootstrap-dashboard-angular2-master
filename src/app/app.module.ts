@@ -15,6 +15,7 @@ import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.compon
 
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   imports: [
@@ -27,12 +28,13 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     SidebarModule,
     AppRoutingModule,
     MatFormFieldModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    NgbModule
   ],
-  declarations: [
+  declarations: [	
     AppComponent,
     AdminLayoutComponent
-  ],
+   ],
   exports: [MatSlideToggleModule],
   providers: [],
   bootstrap: [AppComponent]

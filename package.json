@@ -10,7 +10,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start"
-  }, 
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "^14.2.0",
@@ -25,7 +25,9 @@
     "@angular/platform-browser": "^14.2.0",
     "@angular/platform-browser-dynamic": "^14.2.0",
     "@angular/router": "^14.2.0",
+    "@ng-bootstrap/ng-bootstrap": "^13.0.0",
     "@ngui/map": "0.30.3",
+    "@popperjs/core": "^2.10.2",
     "@types/googlemaps": "3.40.5",
     "angular-ng-autocomplete": "^2.0.12",
     "animate.css": "4.1.1",

@@ -48,7 +48,7 @@
                                 <div [hidden]="!Incluir">
                                     <div class="col-md-8">
                                         <div class="form-group">
-                                            <label>Produto</label>
+                                            <label>Produto *</label>
                                             <select class="form-control select" [(ngModel)]="receitaNovo.materiaprimaid" required>
                                                 <option [ngValue]="null" disabled>Selecione...</option>
                                                 <option *ngFor="let produto of produtos" [ngValue]="produto.id">{{produto.descricao}}</option>
@@ -57,7 +57,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label>Percentual</label>
+                                            <label>Percentual *</label>
                                             <input type="text" class="form-control" placeholder="%" [(ngModel)]="receitaNovo.percentualutilizado" required id="percentual" name="percentual">
                                         </div>
                                     </div>
@@ -76,6 +76,9 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="typo-line" [hidden]="!Incluir">
+                                <p class="category">* Campos Obrigatórios</p>
                             </div>
                             <div [hidden]="!Incluir">
                                 <div class="pull-right">

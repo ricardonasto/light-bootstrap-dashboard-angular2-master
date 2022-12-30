@@ -1,3 +1,4 @@
+import { FinanceiroComponent } from './../../financeiro/financeiro.component';
 import { ReceitaComponent } from './../../receita/receita.component';
 import { Routes } from '@angular/router';
 
@@ -19,5 +20,6 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'maps',           component: MapsComponent },
     { path: 'notifications',  component: NotificationsComponent },
     { path: 'upgrade',        component: UpgradeComponent },
-    { path: 'receita/:id',        component: ReceitaComponent}
+    { path: 'receita/:id',    component: ReceitaComponent},
+    { path: 'financeiro',     component: FinanceiroComponent}
 ];

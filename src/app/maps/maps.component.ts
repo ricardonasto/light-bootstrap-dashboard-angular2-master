@@ -2,31 +2,44 @@ import {Component, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
+import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 
 @Component({
   selector: 'app-maps',
+  standalone: true,
+  imports: [NgbDatepickerModule],
   templateUrl: './maps.component.html',
-  styleUrls: ['./maps.component.css']
+  styleUrls: ['./maps.component.css'],
 })
 
 export class MapsComponent implements OnInit {
-  myControl = new FormControl('');
-  options: string[] = ['One', 'Two', 'Three'];
-  filteredOptions: Observable<string[]>;
+  closeResult = '';
 
-  constructor() { }
+  constructor(private modalService: NgbModal) { }
 
   ngOnInit() {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value || '')),
-    );
    }
 
-   private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
+   open(content) {
+		this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
+			(result) => {
+				this.closeResult = `Closed with: ${result}`;
+			},
+			(reason) => {
+				this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+			},
+		);
+	}
 
-    return this.options.filter(option => option.toLowerCase().includes(filterValue));
-  }
+	private getDismissReason(reason: any): string {
+		if (reason === ModalDismissReasons.ESC) {
+			return 'by pressing ESC';
+		} else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+			return 'by clicking on a backdrop';
+		} else {
+			return `with: ${reason}`;
+		}
+	}
 
 }
