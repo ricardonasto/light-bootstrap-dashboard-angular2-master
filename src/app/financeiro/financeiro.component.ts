@@ -1,14 +1,31 @@
+import { Retorno } from './../models/Retorno';
+import { BaixarContaComponent } from './../modais/baixar-conta/baixar-conta.component';
+import { NovaPessoaComponent } from './../modais/nova-pessoa/nova-pessoa.component';
 import { HttpClient } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Pessoa } from 'app/models/Pessoa';
 import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Contas } from 'app/models/Contas';
+import { MatDialog } from '@angular/material/dialog';
+import { DatePipe } from '@angular/common';
 
 declare interface TableData {
   tipo : string;
   headerRow: string[];
-  dataRows: string[][];
+  dataRows: LinhasGrid[];
 }
+declare interface LinhasGrid {
+  id: number;
+  descricao: string;
+  pessoa: string;
+  datavencimento: string;
+  datavencimentod: Date;
+  datapagamento: string;
+  datapagamentod: Date;
+  valor: string;
+  status: string;
+}
+
 declare var $:any;
 
 @Component({
@@ -18,24 +35,23 @@ declare var $:any;
   providers: [NgbModalConfig, NgbModal],
 })
 export class FinanceiroComponent implements OnInit {
+ 
   public tableFinanceiro: TableData;
   classCR = {};
   classCP = {};
   classEditar = {};
   editando = false;
-  editandoNovaPessoa = false;
   Incluir = false;
   novoOuEdicao : String;
   pessoas = [];
-  pessoaDesc: string;
   @Input() contas : Contas;
 
-  constructor(private http : HttpClient, config: NgbModalConfig, private modalService: NgbModal) {
+
+  constructor(private http : HttpClient, 
+              public dialog: MatDialog) {
     this.contas = new Contas();
     this.contas.pessoa = new Pessoa();
     this.Incluir = false;
-    config.backdrop = 'static';
-		config.keyboard = false;
     this.classEditar = {'col-md-12' : true, 'col-md-8' : false};
    }
 
@@ -52,25 +68,32 @@ export class FinanceiroComponent implements OnInit {
         this.classCR = {'btn-info' : true};
         this.classCP = {'btn-info' : false};
         this.editando = false;
-        this.editandoNovaPessoa = false;
         this.classEditar = {'col-md-12' : true, 'col-md-8' : false};
         this.http.get<Contas[]>('https://localhost:44356/Consulta/ContasReceber')
             .subscribe(resultado => {
               let i: number = 0;
-              let table : string[][] = new Array(); 
+              let table : LinhasGrid[] = new Array(); 
 
-               while (i < resultado.length){
-                 let array : string[] = new Array();
-                 array.push(resultado[i].id.toString());
-                 array.push(resultado[i].pessoa.nome);
-                 array.push(resultado[i].valor);
-                 table.push(array);
+              while (i < resultado.length){
+                 let statusConta = "";
+
+                 let linha : LinhasGrid = { id: resultado[i].id,
+                                            descricao: resultado[i].descricao,
+                                            pessoa: resultado[i].pessoa.nome,
+                                            datavencimento: this.formatacaoData(resultado[i].datavencimento.toString()),
+                                            datapagamento: this.formatacaoData(resultado[i].datapagamento.toString()),
+                                            datavencimentod: resultado[i].datavencimento,
+                                            datapagamentod: resultado[i].datapagamento,
+                                            valor: resultado[i].valor,
+                                            status: resultado[i].statusgrid
+                                          };
+                  table.push(linha);
                  i = i + 1; 
                }
 
                 this.tableFinanceiro = {
                   tipo: 'CR',
-                  headerRow: [ 'ID', 'Fornecedor', 'Custo'],
+                  headerRow: [ 'ID', 'Descrição', 'Pessoa', 'Vencimento', 'Pagamento', 'Valor', 'Status'],
                   dataRows: table
                 };
             } );
@@ -79,25 +102,30 @@ export class FinanceiroComponent implements OnInit {
         this.classCR = {'btn-info' : false};
         this.classCP = {'btn-info' : true};
         this.editando = false;
-        this.editandoNovaPessoa = false;
         this.classEditar = {'col-md-12' : true, 'col-md-8' : false};
         this.http.get<Contas[]>('https://localhost:44356/Consulta/ContasPagar')
             .subscribe(resultado => {
               let i: number = 0;
-              let table : string[][] = new Array(); 
+              let table : LinhasGrid[] = new Array(); 
 
-               while (i < resultado.length){
-                 let array : string[] = new Array();
-                 array.push(resultado[i].id.toString());
-                 array.push(resultado[i].pessoa.nome);
-                 array.push(resultado[i].valor);
-                 table.push(array);
+              while (i < resultado.length){
+                let linha : LinhasGrid = { id: resultado[i].id,
+                                          descricao: resultado[i].descricao,
+                                          pessoa: resultado[i].pessoa.nome,
+                                          datavencimento: this.formatacaoData(resultado[i].datavencimento.toString()),
+                                          datapagamento: this.formatacaoData(resultado[i].datapagamento.toString()),
+                                          datavencimentod: resultado[i].datavencimento,
+                                          datapagamentod: resultado[i].datapagamento,
+                                          valor: resultado[i].valor,
+                                          status: resultado[i].statusgrid
+                                        };
+                        table.push(linha);
                  i = i + 1; 
                }
 
                 this.tableFinanceiro = {
                   tipo: 'CP',
-                  headerRow: [ 'ID', 'Fornecedor', 'Custo'],
+                  headerRow: [ 'ID', 'Descrição', 'Pessoa', 'Vencimento', 'Pagamento', 'Valor', 'Status'],
                   dataRows: table
                 };
             } );
@@ -114,7 +142,6 @@ export class FinanceiroComponent implements OnInit {
       });
     }
     else {
-      console.log(this.contas);
       this.http.put('https://localhost:44356/Cadastro/ContasPagar', this.contas)
       .subscribe(resultado => {
           this.mensagem("Contas a pagar inserida com sucesso!", "success");
@@ -124,16 +151,21 @@ export class FinanceiroComponent implements OnInit {
     }
   }
 
-  editar(dados){
+  editar(dados: LinhasGrid){
+    console.log(dados);
     this.novoOuEdicao = 'Editar';
     this.Incluir = false;
     this.classEditar = {'col-md-12' : false, 'col-md-8' : true};
       this.editando = true;
-      this.editandoNovaPessoa = false;
       if (dados != null) {
-        this.contas.id = dados[0];
-        this.contas.pessoa.nome = dados[1];
-        this.contas.valor = dados[2];
+        this.contas.id = dados.id;
+        this.contas.descricao = dados.descricao;
+        this.contas.pessoa.nome = dados.pessoa;
+        this.contas.datavencimento = dados.datavencimentod;
+        this.contas.datapagamento = dados.datapagamentod;
+        this.contas.valor = dados.valor;
+        this.contas.status = dados.status;
+        console.log(this.contas)
       }
   }
 
@@ -158,25 +190,6 @@ export class FinanceiroComponent implements OnInit {
                  i = i + 1; 
                }
             } );
-  }
-
-  novaPessoa(){
-    this.editandoNovaPessoa = true;
-    this.editando = false;
-  }
-
-  salvarPessoa(){
-    this.http.put('https://localhost:44356/Cadastro/Pessoa?pessoa=' + this.pessoaDesc, null)
-       .subscribe(resultado => {
-          this.mensagem("Pessoa inserida com sucesso!", "success");
-          this.cancelarPessoa();
-          this.buscarPessoas();
-       });
-  }
-
-  cancelarPessoa(){
-    this.editandoNovaPessoa = false;
-    this.editando = true;
   }
 
   cancelarEdicao(){
@@ -230,5 +243,69 @@ export class FinanceiroComponent implements OnInit {
           });
     }
   }
+
+  novaPessoa(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    let d = this.dialog.open(NovaPessoaComponent, {
+      width: '300px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
+    d.beforeClosed().subscribe(result => {
+      this.buscarPessoas();
+    });
+    
+  }
+
+  formatacaoData(value: string) {
+    var datePipe = new DatePipe("en-US");
+     value = datePipe.transform(value, 'dd/MM/yyyy');
+     return value;
+ }
+
+  baixarConta(enterAnimationDuration: string, exitAnimationDuration: string){
+    let d = this.dialog.open(BaixarContaComponent, {
+      width: '450px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+      data: { conta: this.contas, tipo: this.tableFinanceiro.tipo }
+    });
+    d.beforeClosed().subscribe(result => {
+      if (this.tableFinanceiro.tipo == 'CR'){
+        this.popularGrid('cr');
+      }
+      else {
+        this.popularGrid('cp');
+      }
+    });
+ }
+
+ estornarConta(){
+  if (this.tableFinanceiro.tipo == 'CR'){
+    this.http.put<Retorno>('https://localhost:44356/Alteracao/EstornaBaixarContaReceber', this.contas)
+      .subscribe(resultado => {
+        if (resultado.ok){
+          this.mensagem("Estorno realizado com sucesso!", "success");
+          this.limparEdicaoInclusao();
+          this.popularGrid("cr");
+         }
+         else {
+          this.mensagem(resultado.msgerro, "danger");
+         }
+      }); 
+}
+else {
+  this.http.put<Retorno>('https://localhost:44356/Alteracao/EstornaBaixarContaPagar', this.contas)
+      .subscribe(resultado => {
+        if (resultado.ok){
+          this.mensagem("Estorno realizado com sucesso!", "success");
+          this.limparEdicaoInclusao();
+          this.popularGrid("cp");
+         }
+         else {
+          this.mensagem(resultado.msgerro, "danger");
+         }
+      });
+}
+ }
 
 }

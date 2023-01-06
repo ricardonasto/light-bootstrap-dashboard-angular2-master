@@ -1,45 +1,29 @@
-import {Component, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
-import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
+import {Component, Inject} from '@angular/core';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-maps',
-  standalone: true,
-  imports: [NgbDatepickerModule],
   templateUrl: './maps.component.html',
-  styleUrls: ['./maps.component.css'],
 })
 
-export class MapsComponent implements OnInit {
-  closeResult = '';
 
-  constructor(private modalService: NgbModal) { }
+export class MapsComponent { 
+	constructor(public dialog: MatDialog) {}
 
-  ngOnInit() {
-   }
-
-   open(content) {
-		this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
-			(result) => {
-				this.closeResult = `Closed with: ${result}`;
-			},
-			(reason) => {
-				this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-			},
-		);
-	}
-
-	private getDismissReason(reason: any): string {
-		if (reason === ModalDismissReasons.ESC) {
-			return 'by pressing ESC';
-		} else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-			return 'by clicking on a backdrop';
-		} else {
-			return `with: ${reason}`;
-		}
-	}
-
+  openDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this.dialog.open(DialogAnimationsExampleDialog, {
+      width: '250px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
+  }
 }
+
+@Component({
+	selector: 'dialog-animations-example-dialog',
+	templateUrl: './dialog-overview-example-dialog.html',
+  })
+  export class DialogAnimationsExampleDialog {
+	constructor(public dialogRef: MatDialogRef<DialogAnimationsExampleDialog>) {}
+  }
+ 

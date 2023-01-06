@@ -1,3 +1,10 @@
+import { VendasComponent } from './../../vendas/vendas.component';
+import { RetiradaCaixaComponent } from 'app/modais/retirada-caixa/retirada-caixa.component';
+import { BaixarContaComponent } from './../../modais/baixar-conta/baixar-conta.component';
+import { AberturaCaixaComponent } from './../../modais/abertura-caixa/abertura-caixa.component';
+import { NovaPessoaComponent } from './../../modais/nova-pessoa/nova-pessoa.component';
+
+import { CaixaComponent } from './../../caixa/caixa.component';
 import { FinanceiroComponent } from './../../financeiro/financeiro.component';
 import { ReceitaComponent } from './../../receita/receita.component';
 import { NgModule } from '@angular/core';
@@ -19,6 +26,9 @@ import { MapsComponent } from '../../maps/maps.component';
 import { NotificationsComponent } from '../../notifications/notifications.component';
 import { UpgradeComponent } from '../../upgrade/upgrade.component';
 import { NgbPaginationModule, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MovimentosCaixaComponent } from 'app/modais/movimentos-caixa/movimentos-caixa.component';
+import { FechamentoCaixaComponent } from 'app/modais/fechamento-caixa/fechamento-caixa.component';
 
 
 @NgModule({
@@ -29,7 +39,8 @@ import { NgbPaginationModule, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap'
     LbdModule,
     NguiMapModule.forRoot({apiUrl: 'https://maps.google.com/maps/api/js?key=YOUR_KEY_HERE'}),
     NgbPaginationModule, 
-    NgbAlertModule
+    NgbAlertModule,
+    MatDialogModule
   ],
   declarations: [
     HomeComponent,
@@ -40,7 +51,16 @@ import { NgbPaginationModule, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap'
     NotificationsComponent,
     UpgradeComponent,
     ReceitaComponent,
-    FinanceiroComponent
+    FinanceiroComponent,
+    CaixaComponent,
+    MapsComponent,
+    NovaPessoaComponent,
+    AberturaCaixaComponent,
+    BaixarContaComponent,
+    MovimentosCaixaComponent,
+    FechamentoCaixaComponent,
+    RetiradaCaixaComponent,
+    VendasComponent
   ]
 })
 

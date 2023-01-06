@@ -31,7 +31,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     MatSlideToggleModule,
     NgbModule
   ],
-  declarations: [	
+  declarations: [		
     AppComponent,
     AdminLayoutComponent
    ],

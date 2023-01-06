@@ -54,6 +54,12 @@
     font-weight: 400;
     color: #9a9a9a;
     display: inline-block;
+    height: 100%;
+    width: 100%;
+}
+
+.modalTextBalck{
+    color: #000000;
 }
 
 .ModalTitle{
@@ -63,4 +69,40 @@
 
 .modalValor{
     margin-top: 7px;
+}
+
+.modalNovo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modalNovo_label{
+    padding-right: 10px;
+    font-size: 10px;
+}
+
+.modalNovo_input{
+    height: 25px !important;
+}
+
+.setaBaixo{
+    transform: rotate(0deg);
+}
+
+.setaCima{
+    transform: rotate(180deg);
+}
+
+.collapse{
+    margin-left: 10px !important;
+}
+
+.collapsing{
+    margin-left: 10px !important;
+}
+
+.btn-caixa{
+    padding: 2px 5px !important;
+    font-size: 12px !important;
 }

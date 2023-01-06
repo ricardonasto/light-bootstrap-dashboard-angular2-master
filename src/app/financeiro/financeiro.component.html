@@ -34,7 +34,21 @@
               </thead>
               <tbody>
                 <tr *ngFor="let row of tableFinanceiro.dataRows" class="linhaEdit" (click)="editar(row)">
-                  <td *ngFor="let cell of row">{{ cell }}</td>
+                  <td>{{ row.id }} </td>
+                  <td>{{ row.descricao }} </td>
+                  <td>{{ row.pessoa }} </td>
+                  <td>{{ row.datavencimento | date: 'dd/MM/yyyy' }}</td>
+                  <td>{{ row.pagamento | date: 'dd/MM/yyyy' }}</td>
+                  <td>{{ row.valor }}</td>
+                  <td *ngIf="row.status == 'P' ">
+                      <label class="content-display-color" data-html="true" data-placement="top" data-toggle="tooltip" style="background-color: #58d94f" title="Pago"></label>
+                  </td>
+                  <td *ngIf="row.status == 'A' ">
+                      <label class="content-display-color" data-html="true" data-placement="top" data-toggle="tooltip" style="background-color: #337ab7" title="Aberto"></label>
+                  </td>
+                  <td *ngIf="row.status == 'X' ">
+                      <label class="content-display-color" data-html="true" data-placement="top" data-toggle="tooltip" style="background-color: #d9534f" title="Atraso"></label>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -92,49 +106,81 @@
                   </div>
                 </div>
               </div>
-              <div class="row">
-                <div [hidden]="!Incluir">
-                  <div class="col-md-8">
-                    <div class="form-group">
-                      <label>Pessoa * </label>
-                        <select class="form-control select" [(ngModel)]="contas.pessoaid" required>
-                          <option [ngValue]="null" disabled>Selecione...</option>
-                          <option *ngFor="let pessoa of pessoas" [ngValue]="pessoa.id">{{ pessoa.nome }}</option>
-                        </select>
-                        <span class="novaPessoa" id="btnAddPessoa" (click)="novaPessoa()">Nova Pessoa</span>
+              <div [hidden]="!Incluir">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <label>Descrição *</label>
+                      <input type="text" class="form-control" placeholder="Descrição" [(ngModel)]="contas.descricao" required id="descricao" name="descricao" required/>
                     </div>
                   </div>
-                  <div class="col-md-4">
-                    <div class="form-group">
-                      <label>Valor *</label>
-                      <input type="text" class="form-control" placeholder="R$" [(ngModel)]="contas.valor" required id="valor" name="valor" required/>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label>Pessoa * </label>
+                          <select class="form-control select" [(ngModel)]="contas.pessoaid" required>
+                            <option [ngValue]="null" disabled>Selecione...</option>
+                            <option *ngFor="let pessoa of pessoas" [ngValue]="pessoa.id">{{ pessoa.nome }}</option>
+                          </select>
+                          <span class="novaPessoa" id="btnAddPessoa" (click)="novaPessoa('300ms', '300ms')">Nova Pessoa</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div [hidden]="Incluir">
-                  <div class="col-md-8">
-                    <div class="form-group">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Vencimento *</label>
+                        <input type="date" class="form-control" placeholder="Vencimento" [(ngModel)]="contas.datavencimento" required id="vencimento" name="vencimento" required/>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Valor *</label>
+                        <input type="text" class="form-control" placeholder="R$" [(ngModel)]="contas.valor" required id="valor" name="valor" required/>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+
+              <div [hidden]="Incluir">
+                  <div class="row">
+                    <div class="col-md-8">
                       <label>Pessoa</label>
                       <input type="text" class="form-control" placeholder="Nome" [(ngModel)]="contas.pessoa.nome" id="pessoa" name="pessoa" readonly/>
                     </div>
                   </div>
-                  <div class="col-md-4">
-                    <div class="form-group">
-                      <label>Valor</label>
-                      <input type="text" class="form-control" placeholder="R$" [(ngModel)]="contas.valor" required id="valor" name="valor" readonly/>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <label>Descrição</label>
+                      <input type="text" class="form-control" placeholder="Descrição" [(ngModel)]="contas.descricao" id="descricao" name="descricao" readonly/>
                     </div>
                   </div>
-                </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <label>Vencimento</label>
+                      <input type="text" class="form-control" placeholder="Vencimento" [(ngModel)]="contas.datavencimento" id="vencimento" name="vencimento" readonly/>
+                    </div>
+                    <div class="col-md-6">
+                      <label>Valor</label>
+                      <input type="text" class="form-control" placeholder="valor" [(ngModel)]="contas.valor" required id="valor" name="valor" readonly/>
+                    </div>
+                  </div>
+                  <br>
               </div>
               <div class="typo-line" [hidden]="!Incluir">
                 <p class="category">* Campos Obrigatórios</p>
               </div>
               <div class="pull-right">
                 <div [hidden]="Incluir">
+                  <div class="btn-group" *ngIf="contas.status != 'P' ">
+                    <button type="button" class="btn btn-info btn-fill" (click)="baixarConta('300ms', '300ms')">Baixar</button>
+                  </div>
+                  <div class="btn-group" *ngIf="contas.status == 'P' ">
+                    <button type="button" class="btn btn-info btn-fill" (click)="estornarConta()">Estornar</button>
+                  </div>
                   <div class="btn-group">
                     <button type="button" class="btn btn-info btn-fill" (click)="cancelarEdicao()">Cancelar</button>
                   </div>
-                  <div class="btn-group">
+                  <div class="btn-group" *ngIf="contas.status != 'P' ">
                     <button type="button" class="btn btn-info btn-fill" (click)="excluir()">Excluir</button>
                   </div>
                 </div>
@@ -152,9 +198,6 @@
           </div>
         </div>
       </div>
-
-      
-
     </div>
   </div>
 </div>
